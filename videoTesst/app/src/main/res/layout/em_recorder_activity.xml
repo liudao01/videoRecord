@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_top_bar"
         android:background="@color/top_bar_normal_bg"
-        android:gravity="center_vertical" >
+        android:gravity="center_vertical">
 
         <include layout="@layout/ease_commom_back_btn" />
 
@@ -17,14 +17,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/recording_video"
+            android:text="视频录制"
             android:textColor="#ffffff"
             android:textSize="18sp" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent">
 
         <VideoView
             android:id="@+id/mVideoView"
@@ -35,8 +35,8 @@
             android:id="@+id/switch_btn"
             android:layout_width="45dip"
             android:layout_height="45dip"
-            android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
             android:background="@drawable/em_camera_switch_selector"
             android:visibility="invisible" />
 

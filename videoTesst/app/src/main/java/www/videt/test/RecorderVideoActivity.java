@@ -117,7 +117,9 @@ public class RecorderVideoActivity extends Activity implements
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);// 设置全屏
         // 选择支持半透明模式，在有surfaceview的activity中使用
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
+
         setContentView(R.layout.em_recorder_activity);
+
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
                 CLASS_LABEL);
