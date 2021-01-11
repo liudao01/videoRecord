@@ -76,6 +76,8 @@ public class RecorderVideoActivity extends Activity implements
         OnInfoListener {
     private static final String TAG = "RecorderVideoActivity";
     private final static String CLASS_LABEL = "RecordActivity";
+
+
     private PowerManager.WakeLock mWakeLock;
     private ImageView btnStart;// 开始录制按钮
     private ImageView btnStop;// 停止录制按钮

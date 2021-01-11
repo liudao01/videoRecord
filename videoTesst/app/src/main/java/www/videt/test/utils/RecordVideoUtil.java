@@ -438,22 +438,4 @@ public class RecordVideoUtil {
         return bitmap;
     }
 
-//    需要将以下方法放在调用此工具类的Activity/fragment中——解决暂停后无法录制的问题
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        if (videoUtil == null) return;
-//        videoUtil.startPreview();
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        if (videoUtil == null) return;
-//        if (isRecordVideo) {
-//            videoUtil.stopRecord();
-//        }
-//        videoUtil.stopPreview();
-//        isRecordVideo  = false;
-//    }
 }
