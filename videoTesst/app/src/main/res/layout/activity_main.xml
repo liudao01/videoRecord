@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.myvideo.MainActivity" >
+     >
 
     <TextView
         android:id="@+id/tv_url"
@@ -18,10 +18,17 @@
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
         android:layout_marginLeft="34dp"
         android:layout_marginTop="18dp"
         android:text="去录像" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_below="@id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="34dp"
+        android:layout_marginTop="18dp"
+        android:text="获取权限" />
 
 </RelativeLayout>

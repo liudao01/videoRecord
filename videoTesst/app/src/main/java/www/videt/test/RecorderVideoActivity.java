@@ -56,8 +56,13 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
+
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 
 import www.videt.test.utils.AutoFocusManage;
 import www.videt.test.utils.EaseCommonUtils;
@@ -121,6 +126,8 @@ public class RecorderVideoActivity extends Activity implements
 
 
     }
+
+
 
     private void initViews() {
         btn_switch = (Button) findViewById(R.id.switch_btn);

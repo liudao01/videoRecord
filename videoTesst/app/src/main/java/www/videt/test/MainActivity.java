@@ -10,9 +10,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
+
+import java.util.List;
+
 public class MainActivity extends Activity {
+    private Button button2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +31,56 @@ public class MainActivity extends Activity {
 
             @Override
             public void onClick(View arg0) {
+
+
                 Intent intent = new Intent();
                 intent.setClass(getApplicationContext(),
                         RecorderVideoActivity.class);
                 startActivityForResult(intent, 100);
             }
         });
+
+
+        button2 = (Button) findViewById(R.id.button2);
+
+        button2.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getPermissions();
+            }
+        });
+    }
+
+    private  void getPermissions(){
+        XXPermissions.with(this)
+                // 可设置被拒绝后继续申请，直到用户授权或者永久拒绝
+                //.constantRequest()
+                // 支持请求6.0悬浮窗权限8.0请求安装权限
+                //.permission(Permission.REQUEST_INSTALL_PACKAGES)
+                .permission(Permission.CAMERA)
+                .permission(Permission.BODY_SENSORS)
+                .permission(Permission.RECORD_AUDIO)
+                .permission(Permission.READ_EXTERNAL_STORAGE)
+                .permission(Permission.WRITE_EXTERNAL_STORAGE)
+                // 不指定权限则自动获取清单中的危险权限
+//                .permission(Permission.Group.STORAGE)
+                .request(new OnPermission() {
+
+                    @Override
+                    public void hasPermission(List<String> granted, boolean all) {
+                        if (all) {
+//                            ToastUtils.showCenter("获取权限成功");
+//                            tv_camera.callOnClick();
+                            Toast.makeText(MainActivity.this, "获取权限成功", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+                        Toast.makeText(MainActivity.this, "获取权限成功", Toast.LENGTH_SHORT).show();
+//                        ToastUtils.showCenter("获取权限失败");
+                    }
+                });
     }
 
     @Override
