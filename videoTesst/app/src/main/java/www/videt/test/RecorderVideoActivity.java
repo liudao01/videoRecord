@@ -86,7 +86,7 @@ public class RecorderVideoActivity extends Activity implements
     private int previewWidth = 640;
     private int previewHeight = 480;
 
-//    private int defaultPreviewWidth = 1920;
+    //    private int defaultPreviewWidth = 1920;
 //    private int defaultPreviewHeight = 1080;
     private int defaultPreviewWidth = 1280;
     private int defaultPreviewHeight = 720;
@@ -97,7 +97,11 @@ public class RecorderVideoActivity extends Activity implements
     Parameters cameraParameters = null;
     private SurfaceHolder mSurfaceHolder;
     int defaultVideoFrameRate = -1;
-    AutoFocusManage autoFocusManage;
+    private AutoFocusManage autoFocusManage;
+
+//    private float maxMinuie = 10;//最大三分钟
+    private float maxMinuie = 180;//最大三分钟
+
 
     @SuppressLint("InvalidWakeLockTag")
     @Override
@@ -131,6 +135,40 @@ public class RecorderVideoActivity extends Activity implements
         mSurfaceHolder.addCallback(this);
         mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         chronometer = (Chronometer) findViewById(R.id.chronometer);
+
+        chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+
+            @Override
+            public void onChronometerTick(Chronometer chronometer) {
+                LogUtils.d("打印回调计时器");
+                long recordingTime = SystemClock.elapsedRealtime() - chronometer.getBase();// 保存这次记录了的时间
+                final CharSequence contentDescription = chronometer.getContentDescription();
+                LogUtils.d("计时器 recordingTime = " + recordingTime);
+//                long minute = recordingTime / 60000;
+                float second = Math.round((float) recordingTime / 1000);
+                if (maxMinuie <= second) {
+                    recorderStop(true);
+                }
+            }
+        });
+    }
+
+
+    public static String timeParse(long duration) {
+        String time = "";
+        long minute = duration / 60000;
+        long seconds = duration % 60000;
+        long second = Math.round((float) seconds / 1000);
+
+        if (minute < 10) {
+            time += "0";
+        }
+        time += minute + ":";
+        if (second < 10) {
+            time += "0";
+        }
+        time += second;
+        return time;
     }
 
     public void back(View view) {
@@ -340,46 +378,54 @@ public class RecorderVideoActivity extends Activity implements
                 chronometer.start();
                 break;
             case R.id.recorder_stop:
-                btnStop.setEnabled(false);
-                // 停止拍摄
-                stopRecording();
-//                btn_switch.setVisibility(View.VISIBLE);
-                chronometer.stop();
-                btnStart.setVisibility(View.VISIBLE);
-                btnStop.setVisibility(View.INVISIBLE);
-                new AlertDialog.Builder(this)
-                        .setMessage(R.string.Whether_to_send)
-                        .setPositiveButton(R.string.ok,
-                                new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        dialog.dismiss();
-                                        sendVideo(null);
-
-                                    }
-                                })
-                        .setNegativeButton(R.string.cancel,
-                                new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        if (localPath != null) {
-                                            File file = new File(localPath);
-                                            if (file.exists())
-                                                file.delete();
-                                        }
-                                        finish();
-
-                                    }
-                                }).setCancelable(false).show();
+                recorderStop(false);
                 break;
 
             default:
                 break;
         }
+    }
+
+    private void recorderStop(boolean isTime) {
+        String msg = "是否发送视频";
+        if (isTime) {
+            msg = "录制时间已到3分钟,是否发送视频";
+        }
+        btnStop.setEnabled(false);
+        // 停止拍摄
+        stopRecording();
+//                btn_switch.setVisibility(View.VISIBLE);
+        chronometer.stop();
+        btnStart.setVisibility(View.VISIBLE);
+        btnStop.setVisibility(View.INVISIBLE);
+        new AlertDialog.Builder(this)
+                .setMessage(msg)
+                .setPositiveButton("确定",
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                dialog.dismiss();
+                                sendVideo(null);
+
+                            }
+                        })
+                .setNegativeButton("取消",
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                if (localPath != null) {
+                                    File file = new File(localPath);
+                                    if (file.exists())
+                                        file.delete();
+                                }
+                                finish();
+
+                            }
+                        }).setCancelable(false).show();
     }
 
     @Override
@@ -462,7 +508,7 @@ public class RecorderVideoActivity extends Activity implements
 //        1080＊720的分度辨bai率，用5000K左右；
 //        720＊576的分辨率，用3500K左右；
 //        640＊480的分辨率，用1500K左右。
-        mediaRecorder.setVideoEncodingBitRate(5*1024*1024); //清晰
+        mediaRecorder.setVideoEncodingBitRate(5 * 1024 * 1024); //清晰
 //        mediaRecorder.setVideoEncodingBitRate(900*1024);//较为清晰，且文件大小
 //        为3.26M(30秒)
 //        mediaRecorder.setVideoEncodingBitRate(384 * 1024);
@@ -716,44 +762,6 @@ public class RecorderVideoActivity extends Activity implements
                             }
                         }).setCancelable(false).show();
     }
-
-//    @Override
-//    public void onSensorChanged(SensorEvent event) {
-//        float x = event.values[0];
-//        float y = event.values[1];
-//        float z = event.values[2];
-//        if (initFirstSensor) {//初始化默认进入时候的坐标
-//            mLastX = x;
-//            mLastY = y;
-//            mLastZ = z;
-//            initFirstSensor = false;
-//            return;
-//        }
-//        float deltaX = Math.abs(mLastX - x);
-//        float deltaY = Math.abs(mLastY - y);
-//        float deltaZ = Math.abs(mLastZ - z);
-//
-//        LogUtils.d("deltaX = "+deltaX);
-//        LogUtils.d("deltaY = "+deltaY);
-//        LogUtils.d("deltaZ = "+deltaZ);
-//        if (deltaX > 2.5 || deltaY > 2.5 || deltaZ > 2.5) {//计算坐标偏移值
-//
-//            //        获取最清晰拍摄焦距
-//            initAutoFocus();
-////            camera.autoFocus(new Camera.AutoFocusCallback() {
-////                @Override
-////                public void onAutoFocus(boolean success, Camera camera) {
-////                    if (success) {
-////                        //移动手机自动对焦,对焦成功实现自己的逻辑
-////
-////                    }
-////                }
-////            });
-//        }
-//        mLastX = x;
-//        mLastY = y;
-//        mLastZ = z;
-//    }
 
 
 }
